@@ -25,8 +25,8 @@ fn main() {
         let number = line.unwrap().parse::<i32>().unwrap();
         for old2 in old_numbers.iter() {
             for old in old_numbers.iter() {
-                if number + old +old2 == 2020 {
-                    println!("{}x{}z{}={}", number, old,old2, number * old*old2);
+                if number + old + old2 == 2020 {
+                    println!("{}x{}z{}={}", number, old, old2, number * old * old2);
                 }
             }
         }
