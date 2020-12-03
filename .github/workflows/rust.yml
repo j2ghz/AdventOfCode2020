@@ -17,6 +17,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build
-      run: cargo build --verbose
+      run: |
+        for d in 2020/*/
+        do
+            (cd "$d" && test -r Cargo.toml && cargo check --verbose )
+        done
+
     - name: Run tests
-      run: cargo test --verbose
+      run: |
+        for d in 2020/*/
+        do
+            (cd "$d" && test -r Cargo.toml && cargo test --verbose )
+        done
