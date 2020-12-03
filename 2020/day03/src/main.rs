@@ -55,7 +55,7 @@ mod tests {
         assert_eq!(trees_on_slope(7, 1, "example.txt"), 4);
         assert_eq!(trees_on_slope(1, 2, "example.txt"), 2);
     }
-    
+
     #[test]
     fn part2() {
         assert_eq!(trees_on_slope(1, 1, "input.txt"), 58);
