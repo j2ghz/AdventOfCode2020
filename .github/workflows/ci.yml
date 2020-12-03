@@ -24,13 +24,13 @@ jobs:
           toolchain: ${{matrix.toolchain}}
       - uses: Swatinem/rust-cache@v1
       - name: Build
-        uses: actions-rs/cargo@v1.0.1
+        uses: actions-rs/cargo@v1.0.3
         with:
           command: check
           toolchain: ${{matrix.toolchain}}
           args: --release --verbose
       - name: Test
-        uses: actions-rs/cargo@v1.0.1
+        uses: actions-rs/cargo@v1.0.3
         with:
           command: test
           toolchain: ${{matrix.toolchain}}
