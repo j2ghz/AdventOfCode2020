@@ -1,0 +1,37 @@
+name: Build & Test
+
+on:
+  push:
+    paths:
+      - "**/*.rs"
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        toolchain: [stable] #, beta, nightly]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{matrix.toolchain}}
+      - uses: Swatinem/rust-cache@v1
+      - name: Build
+        uses: actions-rs/cargo@v1.0.1
+        with:
+          command: check
+          toolchain: ${{matrix.toolchain}}
+          args: --release --verbose
+      - name: Test
+        uses: actions-rs/cargo@v1.0.1
+        with:
+          command: test
+          toolchain: ${{matrix.toolchain}}
+          args: --release --verbose
