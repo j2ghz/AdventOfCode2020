@@ -2,6 +2,11 @@ use std::{collections::HashMap, fs::read_to_string};
 
 use regex::Regex;
 
+#[cfg(windows)]
+const LINE_ENDING: &'static str = "\r\n";
+#[cfg(not(windows))]
+const LINE_ENDING: &'static str = "\n";
+
 fn main() {
     println!("Hello, world!");
 }
@@ -9,7 +14,7 @@ fn main() {
 fn get_passports(file: &str) -> std::vec::Vec<String> {
     read_to_string(file)
         .unwrap()
-        .split("\r\n\r\n")
+        .split(LINE_ENDING.repeat(2).as_str())
         .map(|s| s.to_string())
         .collect::<Vec<_>>()
 }
