@@ -4,8 +4,6 @@ use std::{
     path::Path,
 };
 
-fn main() {}
-
 pub fn trees_on_slope(right: usize, down: usize, file: &str) -> usize {
     let lines = read_lines(file).unwrap().step_by(down);
     let mut trees = 0;

@@ -5,10 +5,6 @@ use std::{
     path::Path,
 };
 
-fn main() {
-    println!("Hello, world!");
-}
-
 fn split_interval((lower, upper): (i32, i32), split: char) -> (i32, i32) {
     let middle = (lower + upper + 1) / 2;
     println!(

@@ -3,13 +3,9 @@ use std::{collections::HashMap, fs::read_to_string};
 use regex::Regex;
 
 #[cfg(windows)]
-const LINE_ENDING: &'static str = "\r\n";
+const LINE_ENDING: &str = "\r\n";
 #[cfg(not(windows))]
 const LINE_ENDING: &'static str = "\n";
-
-fn main() {
-    println!("Hello, world!");
-}
 
 fn get_passports(file: &str) -> std::vec::Vec<String> {
     read_to_string(file)
