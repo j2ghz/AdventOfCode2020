@@ -6,15 +6,29 @@ fn main() {
     println!("Hello, world!");
 }
 
+fn get_passports(file: &str) -> std::vec::Vec<String> {
+    read_to_string(file)
+        .unwrap()
+        .split("\r\n\r\n")
+        .map(|s| s.to_string())
+        .collect::<Vec<_>>()
+}
+
 fn is_valid(passport: &str) -> bool {
-    let re = Regex::new(r"([a-z]+):\S+\s*").unwrap();
-    let mut props = re
+    let re = Regex::new(r"([a-z]+):(\S+)\s*").unwrap();
+    let props = re
         .captures_iter(passport)
         .map(|cap| (cap.get(1).unwrap().as_str(), cap.get(2).unwrap().as_str()))
         .collect::<HashMap<&str, &str>>();
 
     println!("{:?}", props);
-    false
+    props.get("byr").map(|v|valid_byr(v)).unwrap_or(false) &&
+    props.get("iyr").map(|v|valid_iyr(v)).unwrap_or(false) &&
+    props.get("eyr").map(|v|valid_eyr(v)).unwrap_or(false) &&
+    props.get("hgt").map(|v|valid_hgt(v)).unwrap_or(false) &&
+    props.get("hcl").map(|v|valid_hcl(v)).unwrap_or(false) &&
+    props.get("ecl").map(|v|valid_ecl(v)).unwrap_or(false) &&
+    props.get("pid").map(|v|valid_pid(v)).unwrap_or(false)
 }
 
 fn valid_byr(value: &str) -> bool {
@@ -46,17 +60,28 @@ fn valid_hgt(value: &str) -> bool {
     }
 }
 
+fn valid_hcl(value: &str) -> bool {
+    Regex::new(r"#[0-9a-f]{6}").unwrap().is_match(value)
+}
+
+fn valid_ecl(value: &str) -> bool {
+    Regex::new(r"amb|blu|brn|gry|grn|hzl|oth")
+        .unwrap()
+        .is_match(value)
+}
+
+fn valid_pid(value: &str) -> bool {
+    Regex::new(r"^\d{9}$").unwrap().is_match(value)
+}
+
 fn matches_in_file(filename: &str) -> usize {
-    let contents = read_to_string(filename).unwrap();
-    contents
-        .split("\r\n\r\n")
-        .filter(|pass| is_valid(*pass))
-        .count()
+    let passports = get_passports(filename);
+    passports.iter().filter(|p|is_valid(p)).count()
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::{is_valid, matches_in_file, valid_byr, valid_hgt};
+    use crate::{is_valid, matches_in_file, valid_byr, valid_ecl, valid_hcl, valid_hgt, valid_pid};
 
     #[test]
     fn field_validation() {
@@ -67,6 +92,16 @@ mod tests {
         assert_eq!(true, valid_hgt("190cm"));
         assert_eq!(false, valid_hgt("190in"));
         assert_eq!(false, valid_hgt("190"));
+
+        assert_eq!(true, valid_hcl("#123abc"));
+        assert_eq!(false, valid_hcl("#123abz"));
+        assert_eq!(false, valid_hcl("123abc"));
+
+        assert_eq!(true, valid_ecl("brn"));
+        assert_eq!(false, valid_ecl("wat"));
+
+        assert_eq!(true, valid_pid("000000001"));
+        assert_eq!(false, valid_pid("0123456789"));
     }
 
     macro_rules! passport_tests {
@@ -92,8 +127,12 @@ mod tests {
     fn example() {
         assert_eq!(2, matches_in_file("example.txt"));
     }
-    #[test]
-    fn main() {
+    //#[test]
+    fn part1() {
         assert_eq!(226, matches_in_file("input.txt"));
+    }    
+    #[test]
+    fn part2() {
+        assert_eq!(160, matches_in_file("input.txt"));
     }
 }
