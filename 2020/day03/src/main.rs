@@ -6,7 +6,7 @@ use std::{
 
 fn main() {}
 
-fn trees_on_slope(right: usize, down: usize, file: &str) -> usize {
+pub fn trees_on_slope(right: usize, down: usize, file: &str) -> usize {
     let lines = read_lines(file).unwrap().step_by(down);
     let mut trees = 0;
     let mut pos = 0;

@@ -22,28 +22,28 @@ fn is_valid(passport: &str) -> bool {
         .collect::<HashMap<&str, &str>>();
 
     println!("{:?}", props);
-    props.get("byr").map(|v|valid_byr(v)).unwrap_or(false) &&
-    props.get("iyr").map(|v|valid_iyr(v)).unwrap_or(false) &&
-    props.get("eyr").map(|v|valid_eyr(v)).unwrap_or(false) &&
-    props.get("hgt").map(|v|valid_hgt(v)).unwrap_or(false) &&
-    props.get("hcl").map(|v|valid_hcl(v)).unwrap_or(false) &&
-    props.get("ecl").map(|v|valid_ecl(v)).unwrap_or(false) &&
-    props.get("pid").map(|v|valid_pid(v)).unwrap_or(false)
+    props.get("byr").map(|v| valid_byr(v)).unwrap_or(false)
+        && props.get("iyr").map(|v| valid_iyr(v)).unwrap_or(false)
+        && props.get("eyr").map(|v| valid_eyr(v)).unwrap_or(false)
+        && props.get("hgt").map(|v| valid_hgt(v)).unwrap_or(false)
+        && props.get("hcl").map(|v| valid_hcl(v)).unwrap_or(false)
+        && props.get("ecl").map(|v| valid_ecl(v)).unwrap_or(false)
+        && props.get("pid").map(|v| valid_pid(v)).unwrap_or(false)
 }
 
 fn valid_byr(value: &str) -> bool {
     let num: u16 = value.parse().unwrap();
-    num >= 1920 && num <= 2002
+    (1920..=2002).contains(&num)
 }
 
 fn valid_iyr(value: &str) -> bool {
     let num: u16 = value.parse().unwrap();
-    num >= 2010 && num <= 2020
+    (2010..=2020).contains(&num)
 }
 
 fn valid_eyr(value: &str) -> bool {
     let num: u16 = value.parse().unwrap();
-    num >= 2020 && num <= 2030
+    (2020..=2030).contains(&num)
 }
 
 fn valid_hgt(value: &str) -> bool {
@@ -51,8 +51,8 @@ fn valid_hgt(value: &str) -> bool {
     if let Some(matches) = matches {
         let num: usize = matches.get(1).unwrap().as_str().parse().unwrap();
         match matches.get(2).map(|m| m.as_str()) {
-            Some("in") => num >= 59 && num <= 76,
-            Some("cm") => num >= 150 && num <= 193,
+            Some("in") => (59..=76).contains(&num),
+            Some("cm") => (150..=193).contains(&num),
             _ => false,
         }
     } else {
@@ -74,9 +74,9 @@ fn valid_pid(value: &str) -> bool {
     Regex::new(r"^\d{9}$").unwrap().is_match(value)
 }
 
-fn matches_in_file(filename: &str) -> usize {
+pub fn matches_in_file(filename: &str) -> usize {
     let passports = get_passports(filename);
-    passports.iter().filter(|p|is_valid(p)).count()
+    passports.iter().filter(|p| is_valid(p)).count()
 }
 
 #[cfg(test)]
@@ -128,9 +128,9 @@ mod tests {
         assert_eq!(2, matches_in_file("example.txt"));
     }
     //#[test]
-    fn part1() {
-        assert_eq!(226, matches_in_file("input.txt"));
-    }    
+    // fn part1() {
+    //     assert_eq!(226, matches_in_file("input.txt"));
+    // }
     #[test]
     fn part2() {
         assert_eq!(160, matches_in_file("input.txt"));

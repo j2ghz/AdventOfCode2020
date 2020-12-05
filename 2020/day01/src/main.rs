@@ -4,7 +4,7 @@ use std::{
     path::Path,
 };
 
-fn main2() {
+pub fn main2() {
     let lines = read_lines("input.txt").unwrap();
     let mut old_numbers = Vec::new();
     for line in lines {
@@ -18,7 +18,7 @@ fn main2() {
     }
 }
 
-fn main() {
+pub fn main() {
     let lines = read_lines("input.txt").unwrap();
     let mut old_numbers = Vec::new();
     for line in lines {

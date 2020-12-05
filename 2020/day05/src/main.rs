@@ -43,7 +43,7 @@ fn get_row_column_id(pass: &str) -> (i32, i32, i32) {
     (row, column, id)
 }
 
-fn highest_seat_id(passfile: &str) -> i32 {
+pub fn highest_seat_id(passfile: &str) -> i32 {
     read_lines(passfile)
         .unwrap()
         .map(|s| get_row_column_id(s.unwrap().as_str()).2)
@@ -51,7 +51,7 @@ fn highest_seat_id(passfile: &str) -> i32 {
         .unwrap()
 }
 
-fn get_missing_seat(passfile: &str) -> i32 {
+pub fn get_missing_seat(passfile: &str) -> i32 {
     let seat_ids = read_lines(passfile)
         .unwrap()
         .map(|s| get_row_column_id(s.unwrap().as_str()).2)
@@ -81,7 +81,7 @@ where
 mod tests {
     use std::assert_eq;
 
-    use crate::{get, get_missing_seat, get_row_column_id, highest_seat_id};
+    use crate::{get_missing_seat, get_row_column_id, highest_seat_id};
 
     #[test]
     fn example() {
