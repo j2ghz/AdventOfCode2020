@@ -1,4 +1,5 @@
 use std::{
+    collections::HashSet,
     fs::File,
     io::{self, BufRead},
     path::Path,
@@ -50,6 +51,24 @@ fn highest_seat_id(passfile: &str) -> i32 {
         .unwrap()
 }
 
+fn get_missing_seat(passfile: &str) -> i32 {
+    let seat_ids = read_lines(passfile)
+        .unwrap()
+        .map(|s| get_row_column_id(s.unwrap().as_str()).2)
+        .collect::<HashSet<i32>>();
+    println!("Seats: {:?}", seat_ids);
+    (0..823)
+        .filter(|id| {
+            !seat_ids.contains(&(id))
+                && seat_ids.contains(&(id - 1))
+                && seat_ids.contains(&(id + 1))
+        })
+        .collect::<Vec<_>>()
+        .first()
+        .unwrap()
+        .to_owned()
+}
+
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
 where
     P: AsRef<Path>,
@@ -62,7 +81,7 @@ where
 mod tests {
     use std::assert_eq;
 
-    use crate::{get, get_row_column_id, highest_seat_id};
+    use crate::{get, get_missing_seat, get_row_column_id, highest_seat_id};
 
     #[test]
     fn example() {
@@ -72,5 +91,9 @@ mod tests {
     #[test]
     fn part1() {
         assert_eq!(822, highest_seat_id("input.txt"));
+    }
+    #[test]
+    fn part2() {
+        assert_eq!(705, get_missing_seat("input.txt"));
     }
 }
