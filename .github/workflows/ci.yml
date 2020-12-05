@@ -2,8 +2,6 @@ name: Build & Test
 
 on:
   push:
-    paths:
-      - "**/*.rs"
   pull_request:
 
 env:
