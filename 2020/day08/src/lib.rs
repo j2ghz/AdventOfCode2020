@@ -133,7 +133,7 @@ mod tests {
     }
     #[test]
     fn part_2() {
-        assert_eq!(8, try_until_halts("input.txt"));
+        assert_eq!(2001, try_until_halts("input.txt"));
     }
 
     #[test]
