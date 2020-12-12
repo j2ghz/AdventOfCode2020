@@ -21,5 +21,8 @@ members = [
   "legacy/day05",
   "legacy/day06",
   "legacy/day07",
+  "legacy/day08",
+  "legacy/day09",
+  "legacy/day10",
   "target/aoc/aoc-autobuild",
 ]

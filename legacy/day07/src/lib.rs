@@ -1,3 +1,7 @@
+use nom::bytes::complete::tag;
+use nom::{branch::alt, multi::separated_list1};
+use nom::{bytes::complete::take_while, combinator::map};
+use nom::{sequence::*, IResult};
 use std::{
     collections::HashMap,
     fs::File,
@@ -5,13 +9,6 @@ use std::{
     path::Path,
 };
 
-use nom::{branch::alt, multi::separated_list1};
-use nom::{
-    bytes::complete::tag, character::complete::one_of, character::is_digit, combinator::map_res,
-    multi::many1,
-};
-use nom::{bytes::complete::take_while, combinator::map};
-use nom::{sequence::*, IResult};
 #[derive(Debug, Eq, PartialEq, Hash)]
 pub struct Bag {
     modifier: String,
@@ -23,6 +20,8 @@ impl std::fmt::Display for Bag {
         f.write_fmt(format_args!("'{} {}' bag", &self.modifier, &self.color))
     }
 }
+
+type Rule = (Bag, Vec<(u32, Bag)>);
 
 fn parse_bag(input: &str) -> IResult<&str, Bag> {
     let space = tag(" ");
@@ -60,7 +59,7 @@ fn parse_consequent(input: &str) -> IResult<&str, Vec<(u32, Bag)>> {
     terminated(alt((none, list)), tag("."))(input)
 }
 
-fn parse_rule(input: &str) -> IResult<&str, (Bag, Vec<(u32, Bag)>)> {
+fn parse_rule(input: &str) -> IResult<&str, Rule> {
     tuple((parse_antecedent, parse_consequent))(input)
 }
 
