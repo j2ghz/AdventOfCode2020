@@ -25,7 +25,7 @@ pub fn solve_part1(input: &[u32]) -> u32 {
 mod tests {
     use std::fs::read_to_string;
 
-    use super::solve_part1;
+    use super::{input_generator, solve_part1};
 
     #[test]
     fn part1_example() {
@@ -34,13 +34,8 @@ mod tests {
 
     #[test]
     fn part1() {
-        let input = read_to_string("input/2020/day10.txt")
-            .unwrap()
-            .lines()
-            .into_iter()
-            .map(|l| l.parse::<u32>().unwrap())
-            .collect::<Vec<_>>();
-        assert_eq!(2590, solve_part1(&input));
+        let input = read_to_string("input/2020/day10.txt").unwrap();
+        assert_eq!(2590, solve_part1(&input_generator(&input)));
     }
 
     #[test]
