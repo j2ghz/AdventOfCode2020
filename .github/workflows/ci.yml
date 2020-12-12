@@ -1,4 +1,4 @@
-name: Build & Test
+name: Build & Run
 
 on:
   push:
@@ -17,19 +17,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: ${{matrix.toolchain}}
+
       - uses: Swatinem/rust-cache@v1
-      - name: Build
+
+      - name: Run
         uses: actions-rs/cargo@v1.0.3
         with:
-          command: check
+          command: run
           toolchain: ${{matrix.toolchain}}
-          args: --release --verbose --workspace
-      - name: Test
-        uses: actions-rs/cargo@v1.0.3
-        with:
-          command: test
-          toolchain: ${{matrix.toolchain}}
-          args: --release --verbose --workspace
+          args: --release --verbose
