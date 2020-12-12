@@ -1,9 +1,9 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use itertools::Itertools;
 
 #[aoc_generator(day10)]
-pub fn input_generator(input: &str) -> Vec<u128> {
+pub fn input_generator(input: &str) -> Vec<u8> {
     input
         .lines()
         .map(|l| l.parse().unwrap())
@@ -12,7 +12,7 @@ pub fn input_generator(input: &str) -> Vec<u128> {
 }
 
 #[aoc(day10, part1)]
-pub fn solve_part1(input: &[u128]) -> u128 {
+pub fn solve_part1(input: &[u8]) -> u64 {
     let (d1, d3) = input
         .iter()
         .sorted()
@@ -26,44 +26,32 @@ pub fn solve_part1(input: &[u128]) -> u128 {
 }
 
 #[aoc(day10, part2)]
-fn part2(input: &[u128]) -> u128 {
-    let max = input.iter().max().unwrap() + 3;
-    let all_inputs: Vec<u128> = [0]
-        .iter()
-        .chain(input.iter())
-        .chain([max].iter())
-        .copied()
-        .collect_vec();
-    combinations(/*&[],*/ &all_inputs, &mut HashMap::new())
+pub fn part2(input: &[u8]) -> u128 {
+    let all_inputs: Vec<u8> = [0].iter().chain(input.iter()).copied().collect_vec();
+    combinations(all_inputs[0], &all_inputs[1..], &mut HashMap::new())
 }
 
-fn combinations(
-    /*prev: &[u128],*/ input: &[u128],
-    mut cache: &mut HashMap<Vec<u128>, u128>,
-) -> u128 {
-    let current = input[0];
-    let mut subcombinations: u128 = 0;
-    if input.len() == 1 {
-        /*println!("{:?} {:?}", prev, input);*/
+fn combinations(current: u8, input: &[u8], mut cache: &mut HashMap<Vec<u8>, u128>) -> u128 {
+    if input.is_empty() {
         return 1;
     }
-    for (idx, next) in input.iter().enumerate().skip(1) {
-        if next - current > 3 {
-            break;
-        }
-        subcombinations += if cache.contains_key(input) {
-            cache[input]
+
+    let mut subcombinations: u128 = 0;
+    for next in input.iter().take_while(|x| current + 3 >= **x) {
+        let rest = &input
+            .iter()
+            .skip_while(|x| *next >= **x)
+            .copied()
+            .collect_vec();
+        let cache_key = [*next].iter().chain(rest.iter()).copied().collect_vec();
+        subcombinations += if let Some(val) = cache.get(&cache_key) {
+            *val
         } else {
-            let result = combinations(
-                /*&prev.iter().chain([*next].iter()).copied().collect_vec(),*/
-                &input[idx..],
-                &mut cache,
-            );
-            cache.insert(input.to_vec(), result);
-            result
+            let val = combinations(*next, rest, &mut cache);
+            cache.insert(cache_key, val);
+            val
         }
     }
-
     subcombinations
 }
 
@@ -73,7 +61,7 @@ mod tests {
 
     use itertools::Itertools;
 
-    use super::{combinations, input_generator, part2, solve_part1};
+    use super::{input_generator, part2, solve_part1};
 
     #[test]
     fn part1_example() {
@@ -87,6 +75,12 @@ mod tests {
             .copied()
             .collect();
         assert_eq!(8, part2(&input));
+    }
+
+    #[test]
+    fn part2_basics() {
+        assert_eq!(1, part2(&[1]));
+        assert_eq!(2, part2(&[1, 2]));
     }
 
     #[test]
@@ -106,6 +100,11 @@ mod tests {
     fn part1() {
         let input = read_to_string("input/2020/day10.txt").unwrap();
         assert_eq!(2590, solve_part1(&input_generator(&input)));
+    }
+    #[test]
+    fn part2_input() {
+        let input = read_to_string("input/2020/day10.txt").unwrap();
+        assert_eq!(226775649501184, part2(&input_generator(&input)));
     }
 
     #[test]
