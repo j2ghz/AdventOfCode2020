@@ -23,12 +23,26 @@ pub fn solve_part1(input: &[u32]) -> u32 {
 
 #[cfg(test)]
 mod tests {
+    use std::fs::read_to_string;
+
     use super::solve_part1;
 
     #[test]
     fn part1_example() {
         assert_eq!(35, solve_part1(&[16, 10, 15, 5, 1, 11, 7, 19, 6, 12, 4]));
     }
+
+    #[test]
+    fn part1() {
+        let input = read_to_string("input/2020/day10.txt")
+            .unwrap()
+            .lines()
+            .into_iter()
+            .map(|l| l.parse::<u32>().unwrap())
+            .collect::<Vec<_>>();
+        assert_eq!(2590, solve_part1(&input));
+    }
+
     #[test]
     fn part1_example2() {
         assert_eq!(
