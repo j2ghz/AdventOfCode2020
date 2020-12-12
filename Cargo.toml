@@ -1,14 +1,28 @@
+[package]
+authors = ["J2ghz <j2.00ghz@gmail.com>"]
+edition = "2018"
+name = "advent-of-code"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+aoc-runner = "0.3"
+aoc-runner-derive = "0.3"
+itertools = "0.9.0"
+
 [workspace]
 
 members = [
-  "2020/day01",
-  "2020/day02",
-  "2020/day03",
-  "2020/day04",
-  "2020/day05",
-  "2020/day06",
-  "2020/day07",
-  "2020/day08",
-  "2020/day09",
-  "2020/day10",
+  "legacy/day01",
+  "legacy/day02",
+  "legacy/day03",
+  "legacy/day04",
+  "legacy/day05",
+  "legacy/day06",
+  "legacy/day07",
+  "legacy/day08",
+  "legacy/day09",
+  "legacy/day10",
+  #"target/aoc/aoc-autobuild", to run `cargo aoc`
 ]
