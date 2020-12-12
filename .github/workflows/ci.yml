@@ -26,10 +26,10 @@ jobs:
         with:
           command: check
           toolchain: ${{matrix.toolchain}}
-          args: --release --verbose
+          args: --release --verbose --workspace
       - name: Test
         uses: actions-rs/cargo@v1.0.3
         with:
           command: test
           toolchain: ${{matrix.toolchain}}
-          args: --release --verbose
+          args: --release --verbose --workspace
