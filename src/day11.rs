@@ -1,5 +1,4 @@
 use std::{
-    collections::HashMap,
     convert::{TryFrom, TryInto},
     fmt::Debug,
 };
@@ -54,11 +53,11 @@ impl Debug for Area {
 impl Area {
     fn get_pos(&self, row: usize, col: usize) -> &SpaceType {
         let idx = row * self.cols + col;
-        self.places.get(idx).expect(&format!(
-            "out of range {}of{} {}of{}",
-            row, self.rows, col, self.cols
-        ))
+        self.places
+            .get(idx)
+            .unwrap_or_else(|| panic!("out of range {}of{} {}of{}", row, self.rows, col, self.cols))
     }
+
     fn get_neighbors(&self, row: usize, col: usize) -> Vec<&SpaceType> {
         let min_row = row.saturating_sub(1);
         let max_row = (row + 1).min(self.rows - 1);
@@ -77,11 +76,66 @@ impl Area {
         }
         result
     }
+
     fn get_occ_neighbors(&self, row: usize, col: usize) -> usize {
         self.get_neighbors(row, col)
             .into_iter()
             .filter(|s| **s == SpaceType::Seat(true))
             .count()
+    }
+
+    fn get_seat_in_direction(
+        &self,
+        row: usize,
+        col: usize,
+        drow: isize,
+        dcol: isize,
+    ) -> anyhow::Result<Option<SpaceType>> {
+        let mut row: isize = row.try_into()?;
+        let mut col: isize = col.try_into()?;
+        // println!(
+        //     "Checking neighbors of {},{} in dir {},{}",
+        //     row, col, drow, dcol
+        // );
+        loop {
+            row += drow;
+            col += dcol;
+            // print!("looking at {},{}: ", row, col);
+            if !(0..self.rows.try_into()?).contains(&row)
+                || !(0..self.cols.try_into()?).contains(&col)
+            {
+                // println!("outside");
+                return Ok(None);
+            }
+            if let SpaceType::Seat(occ) = self.get_pos(row.try_into()?, col.try_into()?) {
+                // println!("seat: {}", occ);
+                return Ok(Some(SpaceType::Seat(*occ)));
+            }
+
+            // println!("floor");
+        }
+    }
+
+    fn get_occ_cardinal_seats(&self, row: usize, col: usize) -> anyhow::Result<Vec<SpaceType>> {
+        let directions = [
+            (-1, -1),
+            (-1, 0),
+            (-1, 1),
+            (0, -1),
+            // (0,0),
+            (0, 1),
+            (1, -1),
+            (1, 0),
+            (1, 1),
+        ];
+        Ok(directions
+            .iter()
+            .map(|(r, c)| self.get_seat_in_direction(row, col, *r, *c))
+            .collect::<anyhow::Result<Vec<_>>>()?
+            .into_iter()
+            .filter_map(|x| x)
+            .filter(|x| *x == SpaceType::Seat(true))
+            .collect_vec())
     }
 
     fn step(&self) -> Area {
@@ -98,6 +152,26 @@ impl Area {
             rows: self.rows,
             places: spaces,
         }
+    }
+
+    fn step2(&self) -> anyhow::Result<Area> {
+        let spaces = self
+            .get_places()
+            .map(|((r, c), p)| match p {
+                SpaceType::Floor => Ok(SpaceType::Floor),
+                SpaceType::Seat(false) => Ok(SpaceType::Seat(
+                    self.get_occ_cardinal_seats(r, c)?.is_empty(),
+                )),
+                SpaceType::Seat(true) => Ok(SpaceType::Seat(
+                    self.get_occ_cardinal_seats(r, c)?.len() < 5,
+                )),
+            })
+            .collect::<anyhow::Result<Vec<_>>>()?;
+        Ok(Area {
+            cols: self.cols,
+            rows: self.rows,
+            places: spaces,
+        })
     }
 
     fn index_to_pos(&self, index: usize) -> (usize, usize) {
@@ -151,8 +225,19 @@ pub fn part1(input: &Area) -> usize {
 }
 
 #[aoc(day11, part2)]
-pub fn part2(input: &Area) -> u128 {
-    0
+pub fn part2(input: &Area) -> anyhow::Result<usize> {
+    // println!("{:?}", input);
+    let mut prev = input.step2()?;
+    // println!("{:?}", prev);
+    loop {
+        let next = prev.step2()?;
+        // println!("{:?}", next);
+        if next == prev {
+            return Ok(next.get_occupied_count());
+        } else {
+            prev = next;
+        }
+    }
 }
 
 #[cfg(test)]
@@ -196,6 +281,28 @@ L.LLLLL.LL"
 #.#####.##"
             )
             .get_occ_neighbors(0, 3)
+        );
+    }
+
+    #[test]
+    fn part2_mini() {
+        assert_eq!(
+            8,
+            input_generator(
+                "\
+.......#.
+...#.....
+.#.......
+.........
+..#L....#
+....#....
+.........
+#........
+...#....."
+            )
+            .get_occ_cardinal_seats(4, 3)
+            .unwrap()
+            .len()
         );
     }
 }
