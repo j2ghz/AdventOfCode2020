@@ -94,7 +94,7 @@ impl Ship {
             }
             angle
         };
-        println!("{}", angle);
+        // println!("{}", angle);
         match angle {
             0 => (),
             90 => {
@@ -151,7 +151,7 @@ pub fn input_generator(input: &str) -> Vec<(char, i16)> {
 #[aoc(day12, part1)]
 pub fn part1(input: &[(char, i16)]) -> i16 {
     let result = input.iter().fold(Ship::default(), |s, instr| {
-        println!("{:?}\t{:?}", s, instr);
+        // println!("{:?}\t{:?}", s, instr);
         s.process(*instr)
     });
     result.manhattan_distance()
@@ -160,7 +160,7 @@ pub fn part1(input: &[(char, i16)]) -> i16 {
 #[aoc(day12, part2)]
 pub fn part2(input: &[(char, i16)]) -> i16 {
     let result = input.iter().fold(Ship::default(), |s, instr| {
-        println!("{:?}\t{:?}", s, instr);
+        // println!("{:?}\t{:?}", s, instr);
         s.process2(*instr)
     });
     result.manhattan_distance()
