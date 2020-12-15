@@ -10,13 +10,15 @@ version = "0.1.0"
 anyhow = "1.0"
 aoc-runner = "0.3"
 aoc-runner-derive = "0.3"
+bit-vec = "0.6"
 itertools = "0.9"
+nom = "6.0"
+num = "0.3"
 rayon = "1.5"
-num="0.3"
 
 [profile.release]
-lto = "fat"
 codegen-units = 1
+lto = "fat"
 
 [workspace]
 
