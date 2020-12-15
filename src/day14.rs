@@ -109,7 +109,7 @@ pub fn part1(input: &[Instr]) -> u64 {
 
 #[aoc(day14, part2)]
 pub fn part2(input: &[Instr]) -> anyhow::Result<usize> {
-    todo!()
+    Ok(0)
 }
 
 #[cfg(test)]
