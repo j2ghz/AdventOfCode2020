@@ -30,7 +30,6 @@ impl Memory {
                 self.mask_set_1 = s.chars().map(|c| c == '1').collect();
             }
             Instr::Mem(addr, val) => {
-                dbg!(addr);
                 let mut val = val.clone();
                 apply_mask(&mut val, &self.mask_set_0, &self.mask_set_1);
                 if val.none() {
@@ -57,13 +56,8 @@ impl Memory {
 }
 
 fn apply_mask(curr: &mut BitVec, mask_set_0: &BitVec, mask_set_1: &BitVec) {
-    dbg!(&curr);
-    dbg!(&mask_set_0);
     curr.and(mask_set_0);
-    dbg!(&curr);
-    dbg!(&mask_set_1);
     curr.or(mask_set_1);
-    dbg!(&curr);
 }
 
 #[aoc_generator(day14)]
@@ -110,7 +104,6 @@ pub fn part1(input: &[Instr]) -> u64 {
     for instr in input {
         mem.process(instr);
     }
-    dbg!(&mem);
     mem.count_values()
 }
 
