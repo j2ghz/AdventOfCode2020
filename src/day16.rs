@@ -3,11 +3,11 @@ use anyhow::Result;
 use itertools::Itertools;
 use nom::{
     bytes::complete::{is_not, tag},
-    character::complete::{alpha1, anychar, digit1, newline, none_of},
+    character::complete::{digit1, newline},
     combinator::{all_consuming, map, map_res},
     error::VerboseError,
-    multi::{many1, separated_list1},
-    sequence::{preceded, separated_pair, terminated, tuple},
+    multi::separated_list1,
+    sequence::{preceded, separated_pair, tuple},
     Finish,
 };
 use std::ops::RangeInclusive;
