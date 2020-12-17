@@ -1,5 +1,5 @@
-use anyhow::anyhow;
 use anyhow::Result;
+use anyhow::*;
 use itertools::Itertools;
 use nom::{
     bytes::complete::{is_not, tag},
@@ -10,6 +10,7 @@ use nom::{
     sequence::{preceded, separated_pair, tuple},
     Finish,
 };
+use single::Single;
 use std::ops::RangeInclusive;
 
 #[derive(Debug)]
@@ -20,13 +21,77 @@ struct Field {
 #[derive(Debug)]
 struct Ticket(Vec<u32>);
 #[derive(Debug)]
+struct FieldValues {
+    my_ticket: u32,
+    tickets: Vec<u32>,
+}
+#[derive(Debug)]
 pub struct Scan {
     fields: Vec<Field>,
     my_ticket: Ticket,
     tickets: Vec<Ticket>,
 }
+impl Scan {
+    fn get_values_in_fields(&self) -> anyhow::Result<Vec<FieldValues>> {
+        self.my_ticket
+            .0
+            .iter()
+            .enumerate()
+            .map(|(idx, my_value)| {
+                let others_values = self
+                    .tickets
+                    .iter()
+                    .map(|t| -> anyhow::Result<u32> {
+                        t.0.get(idx)
+                            .copied()
+                            .ok_or_else(|| anyhow!("tickets differ in size"))
+                    })
+                    .collect::<Result<Vec<u32>>>()
+                    .with_context(|| format!("gathering values for ticket field {}", idx))?;
+                Ok(FieldValues {
+                    my_ticket: *my_value,
+                    tickets: others_values,
+                })
+            })
+            .collect::<Result<Vec<FieldValues>>>()
+            .with_context(|| "transposing tickets with ticket fields")
+    }
 
+    fn find_fields_options(&self) -> Result<Vec<(String, u32)>> {
+        fn field_values_match_rules(fv: &FieldValues, rules: &[RangeInclusive<u32>]) -> bool {
+            fv.tickets
+                .iter()
+                .all(|val| rules.iter().any(|rule| rule.contains(val)))
+        }
+
+        let values = self.get_values_in_fields()?;
+        self.fields
+            .iter()
+            .map(|f| -> Result<(String, u32)> {
+                Ok((
+                    f.name.clone(),
+                    values
+                        .iter()
+                        .filter(|fv| field_values_match_rules(fv, &f.rules))
+                        .map(|fv| fv.my_ticket)
+                        .single()
+                        .map_err(|e| anyhow!("{}", e))
+                        .with_context(|| {
+                            format!(
+                                "None of values matched the rules: {:?}\n{:?}",
+                                f.rules, values
+                            )
+                        })?,
+                ))
+            })
+            .collect()
+    }
+}
+
+#[cfg(debug_assertions)]
 type IResult<I, O> = nom::IResult<I, O, nom::error::VerboseError<I>>;
+#[cfg(not(debug_assertions))]
+type IResult<I, O> = nom::IResult<I, O, nom::error::Error<I>>;
 
 #[aoc_generator(day16)]
 pub fn input_generator(input: &str) -> anyhow::Result<Scan> {
@@ -117,8 +182,13 @@ pub fn part1(input: &Scan) -> u32 {
 }
 
 #[aoc(day16, part2)]
-pub fn part2(input: &Scan) -> anyhow::Result<usize> {
-    todo!()
+pub fn part2(input: &Scan) -> anyhow::Result<u32> {
+    Ok(input
+        .find_fields_options()?
+        .iter()
+        .filter(|(n, _)| n.starts_with("departure"))
+        .map(|(_, v)| *v)
+        .product())
 }
 
 #[cfg(test)]
@@ -147,10 +217,13 @@ nearby tickets:
     #[test]
     fn part1() {
         let input = read_to_string("input/2020/day16.txt").expect("input file missing");
-        assert_eq!(0, super::part1(&super::input_generator(&input).unwrap()));
+        assert_eq!(
+            21996,
+            super::part1(&super::input_generator(&input).unwrap())
+        );
     }
 
-    // #[test]
+    #[test]
     fn part2() {
         let input = read_to_string("input/2020/day16.txt").expect("input file missing");
         assert_eq!(
