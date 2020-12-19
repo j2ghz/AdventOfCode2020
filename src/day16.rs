@@ -154,8 +154,7 @@ pub fn input_generator(input: &str) -> anyhow::Result<Scan> {
         parsed
     })
     .map_err(|e: VerboseError<&str>| {
-        dbg!(&e);
-        anyhow!("{}", e)
+        anyhow!("Parsing failed:\n{}\n", nom::error::convert_error(input, e))
     })
 }
 
@@ -212,12 +211,10 @@ nearby tickets:
     }
 
     #[test]
-    fn part1() {
-        let input = read_to_string("input/2020/day16.txt").expect("input file missing");
-        assert_eq!(
-            21996,
-            super::part1(&super::input_generator(&input).unwrap())
-        );
+    fn part1() -> anyhow::Result<()> {
+        let input = read_to_string("input/2020/day16.txt")?;
+        assert_eq!(21996, super::part1(&super::input_generator(&input)?));
+        Ok(())
     }
 
     // TODO: WIP
