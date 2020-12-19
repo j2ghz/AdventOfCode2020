@@ -1,15 +1,7 @@
 use anyhow::Result;
 use anyhow::*;
 use itertools::Itertools;
-use nom::{
-    bytes::complete::{is_not, tag},
-    character::complete::{digit1, newline},
-    combinator::{all_consuming, map, map_res},
-    error::VerboseError,
-    multi::separated_list1,
-    sequence::{preceded, separated_pair, tuple},
-    Finish,
-};
+use nom::{Finish, branch::alt, bytes::complete::{is_not, tag}, character::complete::{digit1, newline}, combinator::{all_consuming, eof, map, map_res}, error::VerboseError, multi::separated_list1, sequence::{preceded, separated_pair, tuple}};
 use single::Single;
 use std::ops::RangeInclusive;
 
@@ -137,8 +129,9 @@ pub fn input_generator(input: &str) -> anyhow::Result<Scan> {
             newline,
             newline,
             parse_tickets,
+            alt((preceded(newline,eof),eof))
         ))),
-        |(f, _, _, m, _, _, t)| Scan {
+        |(f, _, _, m, _, _, t,_)| Scan {
             fields: f,
             my_ticket: m,
             tickets: t,
@@ -150,7 +143,7 @@ pub fn input_generator(input: &str) -> anyhow::Result<Scan> {
         parsed
     })
     .map_err(|e: VerboseError<&str>| {
-        anyhow!("Parsing failed:\n{}\n", nom::error::convert_error(input, e))
+        anyhow!("Parsing failed: {}", nom::error::convert_error(input, e))
     })
 }
 
@@ -201,8 +194,7 @@ nearby tickets:
 7,3,47
 40,4,50
 55,2,20
-38,6,12
-";
+38,6,12";
         assert_eq!(71, super::part1(&super::input_generator(&input).unwrap()));
     }
 
