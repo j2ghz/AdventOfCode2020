@@ -218,7 +218,8 @@ nearby tickets:
     }
 
     // TODO: WIP
-    // #[test]
+    #[test]
+    #[ignore]
     fn part2() {
         let input = read_to_string("input/2020/day16.txt").expect("input file missing");
         assert_eq!(

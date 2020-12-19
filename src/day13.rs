@@ -85,7 +85,8 @@ mod tests {
         );
     }
 
-    // #[test]
+    #[test]
+    #[ignore]
     fn part2() {
         let input = read_to_string("input/2020/day13.txt").expect("input file missing");
         assert_eq!(0, super::part2(&super::input_generator(&input).unwrap()));
