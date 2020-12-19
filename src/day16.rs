@@ -88,10 +88,7 @@ impl Scan {
     }
 }
 
-#[cfg(debug_assertions)]
 type IResult<I, O> = nom::IResult<I, O, nom::error::VerboseError<I>>;
-#[cfg(not(debug_assertions))]
-type IResult<I, O> = nom::IResult<I, O, nom::error::Error<I>>;
 
 #[aoc_generator(day16)]
 pub fn input_generator(input: &str) -> anyhow::Result<Scan> {
@@ -223,7 +220,8 @@ nearby tickets:
         );
     }
 
-    #[test]
+    // TODO: WIP
+    // #[test]
     fn part2() {
         let input = read_to_string("input/2020/day16.txt").expect("input file missing");
         assert_eq!(
