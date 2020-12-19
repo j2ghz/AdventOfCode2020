@@ -1,7 +1,16 @@
 use anyhow::Result;
 use anyhow::*;
 use itertools::Itertools;
-use nom::{Finish, branch::alt, bytes::complete::{is_not, tag}, character::complete::{digit1, newline}, combinator::{all_consuming, eof, map, map_res}, error::VerboseError, multi::separated_list1, sequence::{preceded, separated_pair, tuple}};
+use nom::{
+    branch::alt,
+    bytes::complete::{is_not, tag},
+    character::complete::{digit1, newline},
+    combinator::{all_consuming, eof, map, map_res},
+    error::VerboseError,
+    multi::separated_list1,
+    sequence::{preceded, separated_pair, tuple},
+    Finish,
+};
 use single::Single;
 use std::ops::RangeInclusive;
 
@@ -129,9 +138,9 @@ pub fn input_generator(input: &str) -> anyhow::Result<Scan> {
             newline,
             newline,
             parse_tickets,
-            alt((preceded(newline,eof),eof))
+            alt((preceded(newline, eof), eof)),
         ))),
-        |(f, _, _, m, _, _, t,_)| Scan {
+        |(f, _, _, m, _, _, t, _)| Scan {
             fields: f,
             my_ticket: m,
             tickets: t,
