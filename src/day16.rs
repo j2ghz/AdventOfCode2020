@@ -77,10 +77,7 @@ impl Scan {
                         .single()
                         .map_err(|e| anyhow!("{}", e))
                         .with_context(|| {
-                            format!(
-                                "None of values matched the rules: {:?}\n{:?}",
-                                f.rules, values
-                            )
+                            format!("None of values matched the rules: {:?}", f.rules)
                         })?,
                 ))
             })
@@ -140,9 +137,8 @@ pub fn input_generator(input: &str) -> anyhow::Result<Scan> {
             newline,
             newline,
             parse_tickets,
-            newline,
         ))),
-        |(f, _, _, m, _, _, t, _)| Scan {
+        |(f, _, _, m, _, _, t)| Scan {
             fields: f,
             my_ticket: m,
             tickets: t,
@@ -165,19 +161,19 @@ pub fn part1(input: &Scan) -> u32 {
         .iter()
         .flat_map(|f| f.rules.iter())
         .collect_vec();
-    dbg!(&rules);
-    dbg!(&input.tickets);
+    // dbg!(&rules);
+    // dbg!(&input.tickets);
     let invalid = input
         .tickets
         .iter()
         .flat_map(|t| t.0.iter())
         .filter(|n| !rules.iter().any(|range| range.contains(n)))
         .collect_vec();
-    dbg!(&invalid);
+    // dbg!(&invalid);
     invalid.iter().copied().sum()
 }
 
-#[aoc(day16, part2)]
+// #[aoc(day16, part2)]
 pub fn part2(input: &Scan) -> anyhow::Result<u32> {
     Ok(input
         .find_fields_options()?

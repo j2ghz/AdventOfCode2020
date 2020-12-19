@@ -98,7 +98,7 @@ pub fn part1(input: &[Expression]) -> u64 {
     input.iter().map(|e| e.get_result()).sum()
 }
 
-#[aoc(day18, part2)]
+// #[aoc(day18, part2)]
 pub fn par21(input: &[Expression]) -> anyhow::Result<usize> {
     todo!()
 }
