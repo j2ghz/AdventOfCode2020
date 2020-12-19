@@ -18,6 +18,10 @@ num = "0.3"
 rayon = "1.5"
 single = "1"
 
+[dev-dependencies.cargo-husky]
+features = ["run-cargo-test", "run-cargo-fmt"]
+version = "1"
+
 [profile.release]
 codegen-units = 1
 lto = "fat"
