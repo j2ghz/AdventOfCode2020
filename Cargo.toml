@@ -19,7 +19,7 @@ rayon = "1.5"
 single = "1"
 
 [dev-dependencies.cargo-husky]
-features = ["run-cargo-test", "run-cargo-fmt"]
+features = ["run-cargo-fmt"]
 version = "1"
 
 [profile.release]
