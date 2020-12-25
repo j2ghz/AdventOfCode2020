@@ -1,5 +1,5 @@
 use anyhow::Context;
-use halfbrown::HashMap;
+use std::collections::HashMap;
 
 #[aoc_generator(day15)]
 pub fn input_generator(input: &str) -> anyhow::Result<Vec<u8>> {
