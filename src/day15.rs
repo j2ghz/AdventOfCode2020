@@ -1,5 +1,5 @@
 use anyhow::Context;
-use halfbrown::HashMap;
+use std::collections::HashMap;
 
 #[aoc_generator(day15)]
 pub fn input_generator(input: &str) -> anyhow::Result<Vec<u8>> {
@@ -16,7 +16,7 @@ pub fn part1(input: &[u8]) -> u32 {
     play_until(input, 2020)
 }
 
-pub fn play_until(input: &[u8], stop_at: u32) -> u32 {
+fn play_until(input: &[u8], stop_at: u32) -> u32 {
     let mut nums: HashMap<u32, u32> = HashMap::new();
     let mut round = 0;
     let mut last_num: u32 = 0;
