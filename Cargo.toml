@@ -30,8 +30,8 @@ lto = "fat"
 criterion = "0.3"
 
 [[bench]]
-name = "benches"
 harness = false
+name = "benches"
 
 [workspace]
 
@@ -44,6 +44,5 @@ members = [
   "legacy/day06",
   "legacy/day07",
   "legacy/day08",
-  "legacy/day09",
-  "legacy/day10", #"target/aoc/aoc-autobuild", to run `cargo aoc`
+  "legacy/day09", #"target/aoc/aoc-autobuild", to run `cargo aoc`
 ]
