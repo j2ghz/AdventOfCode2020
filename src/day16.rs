@@ -11,7 +11,6 @@ use nom::{
     sequence::{preceded, separated_pair, tuple},
     Finish,
 };
-use single::Single;
 use std::ops::RangeInclusive;
 
 #[derive(Debug)]
@@ -75,7 +74,7 @@ impl Scan {
                         .iter()
                         .filter(|fv| field_values_match_rules(fv, &f.rules))
                         .map(|fv| fv.my_ticket)
-                        .single()
+                        .exactly_one()
                         .map_err(|e| anyhow!("{}", e))
                         .with_context(|| {
                             format!("None of values matched the rules: {:?}", f.rules)

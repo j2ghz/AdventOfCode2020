@@ -16,7 +16,6 @@ itertools = "0.10"
 nom = "6.0"
 num = "0.3"
 rayon = "1.5"
-single = "1"
 
 [dev-dependencies.cargo-husky]
 features = ["run-cargo-fmt"]
