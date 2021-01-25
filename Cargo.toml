@@ -13,7 +13,7 @@ aoc-runner-derive = "0.3"
 bit-vec = "0.6"
 fnv = "1.0.7"
 itertools = "0.10"
-nom = "6.0"
+nom = "6.1"
 num = "0.3"
 rayon = "1.5"
 
