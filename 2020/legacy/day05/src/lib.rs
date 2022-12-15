@@ -55,9 +55,7 @@ pub fn get_missing_seat(passfile: &str) -> i32 {
     println!("Seats: {:?}", seat_ids);
     (0..823)
         .filter(|id| {
-            !seat_ids.contains(&(id))
-                && seat_ids.contains(&(id - 1))
-                && seat_ids.contains(&(id + 1))
+            !seat_ids.contains(id) && seat_ids.contains(&(id - 1)) && seat_ids.contains(&(id + 1))
         })
         .collect::<Vec<_>>()
         .first()
