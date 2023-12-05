@@ -1,0 +1,15 @@
+[workspace]
+resolver = "2"
+
+members = [
+  "2020/legacy/day01",
+  "2020/legacy/day02",
+  "2020/legacy/day03",
+  "2020/legacy/day04",
+  "2020/legacy/day05",
+  "2020/legacy/day06",
+  "2020/legacy/day07",
+  "2020/legacy/day08",
+  "2020/legacy/day09", #"target/aoc/aoc-autobuild", to run `cargo aoc`
+  "2022"
+]

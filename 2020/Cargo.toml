@@ -32,16 +32,3 @@ criterion = "0.3"
 harness = false
 name = "benches"
 
-[workspace]
-
-members = [
-  "legacy/day01",
-  "legacy/day02",
-  "legacy/day03",
-  "legacy/day04",
-  "legacy/day05",
-  "legacy/day06",
-  "legacy/day07",
-  "legacy/day08",
-  "legacy/day09", #"target/aoc/aoc-autobuild", to run `cargo aoc`
-]
