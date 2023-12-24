@@ -1,15 +1,48 @@
+[package]
+authors = ["J2ghz <j2.00ghz@gmail.com>"]
+edition = "2018"
+name = "advent-of-code"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0"
+aoc-runner = "0.3"
+aoc-runner-derive = "0.3"
+bit-vec = "0.6"
+fnv = "1.0.7"
+itertools = "0.10"
+nom = "6.0"
+num = "0.3"
+rayon = "1.5"
+
+[dev-dependencies.cargo-husky]
+features = ["run-cargo-fmt"]
+version = "1"
+
+[profile.release]
+codegen-units = 1
+lto = "fat"
+
+[dev-dependencies]
+criterion = "0.3"
+
+[[bench]]
+harness = false
+name = "benches"
+
 [workspace]
 resolver = "2"
 
 members = [
-  "2020/legacy/day01",
-  "2020/legacy/day02",
-  "2020/legacy/day03",
-  "2020/legacy/day04",
-  "2020/legacy/day05",
-  "2020/legacy/day06",
-  "2020/legacy/day07",
-  "2020/legacy/day08",
-  "2020/legacy/day09", #"target/aoc/aoc-autobuild", to run `cargo aoc`
-  "2022"
+  "legacy/day01",
+  "legacy/day02",
+  "legacy/day03",
+  "legacy/day04",
+  "legacy/day05",
+  "legacy/day06",
+  "legacy/day07",
+  "legacy/day08",
+  "legacy/day09", #"target/aoc/aoc-autobuild", to run `cargo aoc`
 ]
