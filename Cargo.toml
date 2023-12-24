@@ -44,5 +44,6 @@ members = [
   "legacy/day06",
   "legacy/day07",
   "legacy/day08",
-  "legacy/day09", #"target/aoc/aoc-autobuild", to run `cargo aoc`
+  "legacy/day09",
+  # "target/aoc/aoc-autobuild", #to run `cargo aoc`
 ]

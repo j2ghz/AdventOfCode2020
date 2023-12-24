@@ -155,7 +155,7 @@ pub fn input_generator(input: &str) -> anyhow::Result<Scan> {
     })
 }
 
-#[aoc(day16, part1)]
+// #[aoc(day16, part1)]
 pub fn part1(input: &Scan) -> u32 {
     let rules = input
         .fields
